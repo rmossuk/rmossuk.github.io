@@ -82,7 +82,7 @@ App.store.commit()
 
 <p>Then a commitDetails object with created, updated, deleted and relationships properties is created.  Each of these references the relavent bucket on this transaction.</p>
 
-<p>For each record in the created, updated, deleted buckets, it's send method is called with 'willCommit'</p>
+<p>For each record in the created, updated, deleted buckets, it's send method is called with 'willCommit'.   We only have a record in the created bucket.</p>
 
 <h3>DS.Model</h3>
 
@@ -92,10 +92,9 @@ App.store.commit()
 
 <p>Within DS.Statemanager the send method receives the 'willCommit' event and checks that the event can be sent while in this current state (which is "uncommited" at the moment).   If it can't it will thow the dreaded 'Cannot send event while currentState is' error message!</p>
 
-<p>The sendEvent function is called that then calls the sendRecursively function with event name and the statemanager</p>
+<p>The sendEvent function is called that then calls the sendRecursively function on the statemanager with event name and the currentState which is an instance of DS.State.</p>
 
-<pre><code>- then the sendRecursively function 
-</code></pre>
+<p>the sendRecursively function then transitions the statemanager's state to 'inflight'</p>
       </section>
     </div>
 
