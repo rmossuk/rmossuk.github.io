@@ -82,7 +82,9 @@ App.store.commit()
 
 <p>Then a commitDetails object with created, updated, deleted and relationships properties is created.  Each of these references the relavent bucket on this transaction.</p>
 
-<p>For each record in the created, updated, deleted buckets, it's send method is called with 'willCommit'.   We only have a record in the created bucket.</p>
+<p>For each record in the created, updated, deleted buckets, it's send method is called with 'willCommit'.   </p>
+
+<p>We only have a record in the created bucket.</p>
 
 <h3>DS.Model</h3>
 
@@ -95,6 +97,14 @@ App.store.commit()
 <p>The sendEvent function is called that then calls the sendRecursively function on the statemanager with event name and the currentState which is an instance of DS.State.</p>
 
 <p>the sendRecursively function then transitions the statemanager's state to 'inflight'</p>
+
+<h3>Back to DS.Transaction</h3>
+
+<p>If this transaction is the defaultTransaction then a new transaction is created with this store.  Then the stores defaultTransaction is set to this new transaction.</p>
+
+<p>Next removeCleanRecords is called does what it says and removes all records from within the clean bucket.</p>
+
+<p>Check if there are any records in the created, updated, deleted or relationships.  If so if there is an adapter and it has a commit method then adapter.commit is called with the store and the commitDetails object containing the buckets.</p>
       </section>
     </div>
 
