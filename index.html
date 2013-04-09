@@ -27,7 +27,13 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <p>I have this simple one to many relationship.</p>
+        <p>I have been using Ember.js and EmberData for a long time now and most of my battles still seem to be in EmberData. Therefore i have decided to dive into EmberData and see exactly how the magic works and hopefully why the problems are happening, so that one day i may be able to help fix them !</p>
+
+<p>I am going to start with detailing the process of what actually happens when commit is called.</p>
+
+<h3>The test code</h3>
+
+<p>I have this simple one-to-many relationship. ( Coffeescript )</p>
 
 <pre><code>App.Product = DS.Model.extend 
   name: DS.attr('string')
@@ -38,20 +44,14 @@ App.BuildingBlock = DS.Model.extend
   parent: DS.belongsTo('App.Product')
 </code></pre>
 
-<p>I have created and product prior to this so now have access to App.product.</p>
-
-<p>I now want to add a building block to this product, so i have done</p>
+<p>I have created and committed a product prior to this so now have access to App.product and now i want to add a building block to this product, so i have done</p>
 
 <pre><code>newBuildingBlock = App.product.get("children").createRecord()
 newBuildingBlock.set("parent", App.product)
+App.store.commit()
 </code></pre>
 
-<p>I now want to commit this to my server via the RestAdapter, so i do </p>
-
-<pre><code>App.store.commit()
-</code></pre>
-
-<p>This magically saves this of to my server and but what actually happens ?</p>
+<p>This magically saves this of to my server but what actually happens ?</p>
 
 <p>Lets follow it through the process.</p>
 
