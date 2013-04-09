@@ -159,7 +159,17 @@ The '_reference' property on the record is a computed property that calls the st
 
 <h3>DS.Serializer</h3>
 
-<p>The serialize method </p>
+<p>The serialize method calls createSerializedForm that creates an empty hash for anyone to hook into.  This is saved as serialized var.</p>
+
+<p>If the options has includedId which is default and the record has an id which it has not yet call '_addId' unless call addAttributes</p>
+
+<p>addAttributes loops the records eachAttributes and calls '_addAttribute' with the so far empty serialized hash, the record, the name of the attribute (ie name) and the attribute.type ( string in this case )</p>
+
+<p>_addAttribute calls _keyForAttributeName to get the key for the current attribute ( name )</p>
+
+<p>_keyForAttributeName calls _keyFromMappingOrHook with 'keyForAttributeName'</p>
+
+<p>_keyFromMappingOrHook checks for a mapping key for this attribute and if found returns this unless call the public hook method 'keyForAttributeName' where you can implement your own functionality</p>
       </section>
     </div>
 
