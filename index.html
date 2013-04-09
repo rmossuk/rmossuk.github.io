@@ -116,6 +116,8 @@ App.store.commit()
 
 <p>The created bucket is passed through the filter method that loops each record in the bucket and adds it to a new Ember.OrderedSet if the adapter shouldSave method is true.</p>
 
+<h3>DS.RESTAdapter</h3>
+
 <p>The shouldSave method gets the records '_reference' and checks that it does not have a parent. Which ours does'nt and returns true.<br>
 The '_reference' property on the record is a computed property that calls the store#referenceForClientId method with the records clientId.</p>
 
@@ -125,9 +127,39 @@ The '_reference' property on the record is a computed property that calls the st
 
 <p>The recordReferences and clientIdToType objects are stated as internal bookkeeping will have to look into that later!</p>
 
-<h3>Back to DS.Adapter</h3>
+<h3>Back to DS.RESTAdapter</h3>
 
 <p>The createRecords method is called with the store, type ( App.BuildingBlock ) and the new Ember.OrderedSet with the created record in it.</p>
+
+<p>In createRecords it checks if bulkCommit is set to false.  I have this set to false so we will continue on this path for now!</p>
+
+<p>The adapters _super createRecords method is then called which is DS.Adapter.  </p>
+
+<h3>DS.Adapter</h3>
+
+<p>This method then loops each record in the bucket and calls DS.RESTAdapter createRecord</p>
+
+<h3>DS.RESTAdapter</h3>
+
+<p>The createRecord method calls the rootForType method with the type (App.BuildingBlock) that returns "building_block".  The rootForType method calls rootForType on its 'serializer'</p>
+
+<p>NOTE: get(this, 'serializer').toString() returns "<a>DS.RESTSerializer:ember3759</a>" and not "<a>DS.JSONSerializer:ember3759</a>". Is this a bug ?</p>
+
+<h3>DS.JSONSerializer</h3>
+
+<p>this rootForType method turns App.BuildingBlock into "building_block" string.</p>
+
+<h3>Back to DS.RESTAdapter createRecord method</h3>
+
+<p>calls serialize method with the recoed and  { includeId: true } object.</p>
+
+<h3>DS.Adapter</h3>
+
+<p>serialize method just delegates to its serializer#serialize method.</p>
+
+<h3>DS.Serializer</h3>
+
+<p>The serialize method </p>
       </section>
     </div>
 
