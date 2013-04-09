@@ -104,7 +104,30 @@ App.store.commit()
 
 <p>Next removeCleanRecords is called does what it says and removes all records from within the clean bucket.</p>
 
-<p>Check if there are any records in the created, updated, deleted or relationships.  If so if there is an adapter and it has a commit method then adapter.commit is called with the store and the commitDetails object containing the buckets.</p>
+<p>Check if there are any records in the created, updated, deleted or relationships.  If so if there is an adapter and it has a commit method then adapter.commit is called with the store and the commitDetails object containing the buckets.  Error if no adapter or commit method.</p>
+
+<h3>DS.Adapter</h3>
+
+<p>The DS.Adapter#commit method just delegates to the save method</p>
+
+<p>DS.Adapter#save method creates an Ember.MapWithDefault for each of the created, updated and deleted buckets and loops each record.</p>
+
+<p>We only have one in the created bucket.</p>
+
+<p>The created bucket is passed through the filter method that loops each record in the bucket and adds it to a new Ember.OrderedSet if the adapter shouldSave method is true.</p>
+
+<p>The shouldSave method gets the records '_reference' and checks that it does not have a parent. Which ours does'nt and returns true.<br>
+The '_reference' property on the record is a computed property that calls the store#referenceForClientId method with the records clientId.</p>
+
+<h3>DS.Store</h3>
+
+<p>referenceForClientId checks the recordReferences object for the clientId and returns this object if exists.  If not it gets the clientIdToType[clientId] object and adds this record to the recordReferences object and returns this object.</p>
+
+<p>The recordReferences and clientIdToType objects are stated as internal bookkeeping will have to look into that later!</p>
+
+<h3>Back to DS.Adapter</h3>
+
+<p>The createRecords method is called with the store, type ( App.BuildingBlock ) and the new Ember.OrderedSet with the created record in it.</p>
       </section>
     </div>
 
