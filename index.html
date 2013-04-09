@@ -61,11 +61,41 @@ App.store.commit()
 
 <p>With EmberData you can create multiple transactions and add specific creates, changes and deletes to any transaction.  Doing this allows you to group related changes together and commit just those changes or roll back the changes.</p>
 
-<p>If you do not create a DS.Transaction and add changes to it, EmberData with use the 'defaultTransaction' and add all changes to this global transaction.  This mean that when you commit, all changes with be saved.</p>
+<p>If you do not create a DS.Transaction and add changes to it, EmberData with use the 'defaultTransaction' and add all changes to this global transaction.  This means that when you commit, all changes with be saved.</p>
 
 <h3>DS.Transaction</h3>
 
-<p>Within DS.Transaction we get the store, the stores adapter and the stores defaultTransaction to use.  Then we get the stores 'relationships'.</p>
+<p>When the defaultTransaction is initialised it creates some buckets (clean, created, updated, deleted and inflight) in the form of Ember.OrderedSet's.</p>
+
+<pre><code>set(this, 'buckets', {
+  clean:    Ember.OrderedSet.create(),
+  created:  Ember.OrderedSet.create(),
+  updated:  Ember.OrderedSet.create(),
+  deleted:  Ember.OrderedSet.create(),
+  inflight: Ember.OrderedSet.create()
+});
+</code></pre>
+
+<p>Whenever a record is changed it is added to the relavent bucket to be used when commit is called on the transaction.  For example when we created a new App.BuildingBlock record, this object was added to the created bucket.</p>
+
+<p>Within DS.Transaction#commit we get the store, the stores adapter and the stores defaultTransaction to use.  Then we get the stores 'relationships'. ????WHAT ARE RELATIONSHIPS ????</p>
+
+<p>Then a commitDetails object with created, updated, deleted and relationships properties is created.  Each of these references the relavent bucket on this transaction.</p>
+
+<p>For each record in the created, updated, deleted buckets, it's send method is called with 'willCommit'</p>
+
+<h3>DS.Model</h3>
+
+<p>Within DS.Model the send method just delegates to the App.BuildingBlock instances statemanger#send method</p>
+
+<h3>DS.Statemanager</h3>
+
+<p>Within DS.Statemanager the send method receives the 'willCommit' event and checks that the event can be sent while in this current state (which is "uncommited" at the moment).   If it can't it will thow the dreaded 'Cannot send event while currentState is' error message!</p>
+
+<p>The sendEvent function is called that then calls the sendRecursively function with event name and the statemanager</p>
+
+<pre><code>- then the sendRecursively function 
+</code></pre>
       </section>
     </div>
 
