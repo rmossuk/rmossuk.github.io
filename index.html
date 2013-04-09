@@ -180,6 +180,12 @@ The '_reference' property on the record is a computed property that calls the st
 <h3>back into DS.Serializer serialize method</h3>
 
 <p>call addRelationships</p>
+
+<p>addRelationships loops each relationship for this record and if its a 'hasMany' calls _addHasMany</p>
+
+<p>_addHasMany gets the key for the relationship via mappings or public custom hooks and calls addHasMany</p>
+
+<h3>DS.JSONSerializer</h3>
       </section>
     </div>
 
