@@ -170,6 +170,16 @@ The '_reference' property on the record is a computed property that calls the st
 <p>_keyForAttributeName calls _keyFromMappingOrHook with 'keyForAttributeName'</p>
 
 <p>_keyFromMappingOrHook checks for a mapping key for this attribute and if found returns this unless call the public hook method 'keyForAttributeName' where you can implement your own functionality</p>
+
+<p>back in the _addAttribute method call public addAttribute method with the still so far empty serialized hash, the key ( name ) and the result of serializedValue(value, type).  This performs any transforms that you have setup for this attribute type.  You can create your own custom transforms here.  Basically strings are just converted to String, number to Number etc just in case.</p>
+
+<h3>DS.JSONSerializer</h3>
+
+<p>addAttribute method just adds this attribute name and value to the serialized hash.  You can hook into here to cusomize how you want to add the key/value to the serialized hash</p>
+
+<h3>back into DS.Serializer serialize method</h3>
+
+<p>call addRelationships</p>
       </section>
     </div>
 
