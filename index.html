@@ -186,6 +186,76 @@ The '_reference' property on the record is a computed property that calls the st
 <p>_addHasMany gets the key for the relationship via mappings or public custom hooks and calls addHasMany</p>
 
 <h3>DS.JSONSerializer</h3>
+
+<p>the addHasMany method will add a has-many relationship if it is embedded.  In our case we are not using embedded relationships so we are just returned to _addHasMany</p>
+
+<h3>back into DS.Serializer serialize method</h3>
+
+<p>addRelationships now calls _addBelongsTo for the product relationship.  This then goes and looks up the mapping or hooks for this relationship key 'product' via the _keyForBelongsTo method.  We have a mapping for this called 'parent' so this is returned.</p>
+
+<p>the _addBelongsTo method then calls the public addBelongsTo method with the current serialized data hash, the record, the key (now 'parent') and the relationship (product belongsTo).</p>
+
+<p>the addBelongsTo checks of this relationship is embedded.  Which in our case its not.   Then its gets the relationship key id which is 'product_id' in our case and gets the records product_id value.  This is then added to the serialized hash via its key and value.</p>
+
+<h3>back to the DS.Serializer serialize method</h3>
+
+<p>this now has the serialized data hash built up and returns this hash</p>
+
+<h3>Back to DS.RESTAdapter createRecord method</h3>
+
+<p>The serialized hash is added to a data hash under the root key which in our case is "building_block".</p>
+
+<p>Finally we have reached the ajax method that actually sends the data to the server and receives the response back.   This method is called with the buildURL which in our case is "/building_blocks", the "POST" type and an object containing the serialized data hash, the context (which is the adapter instance) and success and error callbacks.</p>
+
+<h3>back to DS.Transaction commit method</h3>
+
+<p>Now that the transaction has been committed the relationships for this transaction are deleted.</p>
+
+<p>When the server responds with a successful response didCreateRecord is called.  This then calls the store#didSaveRecord.</p>
+
+<h3>DS.Store</h3>
+
+<p>The didSaveRecord first calls the record#adapterDidCommit method</p>
+
+<h3>DS.Model</h3>
+
+<p>The adapterDidCommit method loops through the new attributes returned from the server and updates the records attribute values.</p>
+
+<p>The send method is called with 'didCommit'.  This just delegates to the records statemanager's send method</p>
+
+<h3>DS.Statemanager</h3>
+
+<p>???</p>
+
+<h3>Back to DS.RESTAdapter</h3>
+
+<p>'didCommit' is sent to the sendEvent method which changed the currentState to 'saved'</p>
+
+<p>???DOES SOMETHING ELSE HERE - calls didCommit method that then does something with invokeLifecycleCallbacks ???</p>
+
+<h3>back in the DS.Model adapterDidCommit method</h3>
+
+<p>calls the updateRecordArraysLater method</p>
+
+<p>the updateRecordArraysLater method sets the updateRecordArrays method to be called in this run loop.   Therefore this will be run later.</p>
+
+<h3>back in DS.Store didSaveRecord method</h3>
+
+<p>the didUpdateAttributes method is called</p>
+
+<p>The didUpdateAttributes method loops through the records attributes and calls didUpdateAttribute on each that calls adapterDidUpdateAttribute WHAT DOES THIS DO ????</p>
+
+<h3>Back in DS.Store didCreateRecord method</h3>
+
+<p>This then does something with store.load but its not called yet. ?????</p>
+
+<p>The serializer#extract method is then called</p>
+
+<h3>DS.JSONSerializer</h3>
+
+<p>In the extract method the sideload method is called</p>
+
+<p>In the sideload method </p>
       </section>
     </div>
 
