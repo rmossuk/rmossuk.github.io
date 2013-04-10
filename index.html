@@ -305,7 +305,37 @@ The '_reference' property on the record is a computed property that calls the st
 
 <h3>DS.Store</h3>
 
-<p>The materializeData method sets the stores clientIdToData hash with key of this records clientId to be an object called MATERIALIZED instead of containing the records data hash</p>
+<p>The materializeData method sets the stores clientIdToData hash with key of this records clientId to be an object called MATERIALIZED instead of containing the records data hash.</p>
+
+<p>The records setupData method is called that just create a _data hash on the record with emtpy placeholders for attributes, belongsTo, hasMany and id.</p>
+
+<p>Then the adapters materialize method is called with just delegates to the serializers materialize method</p>
+
+<h3>DS.JSONSerializer</h3>
+
+<p>In the materialize method calls the records materializeId method that sets the id to the materialized id from the payload hash.</p>
+
+<p>The materializeAttributes method is called which calls materializeAttribute for each of the records attributes</p>
+
+<h3>DS.Serializer</h3>
+
+<p>The materializeAttribute method get the value for the current attribute from the serialized hash via the attribute name as key or using any mapping or hooks set for this attribute.  Then through the deserializeValue method it applies any transforms to the attributes value.  Finally it adds the key and value to the records "_data.attributes" hash via the records materializeAttribute method.</p>
+
+<h3>Back in the DS.JSONSerializer materialize method</h3>
+
+<p>The materializeRelationships method is called which loops each of the records relationships.  The materializeHasMany method is called if the relationship is a hasMany and the materializeBelongsTo method is called if its a belongsTo.   Ours has a belongsTo relationship.</p>
+
+<p>The materializeBelongsTo method gets the relationship key or uses any mapping or hooks set for this relationship to use as the key.  In our case the key is 'parent'.  Then through the extractBelongsTo method it gets the value for that key from the serialized hash which is the id of the parent / product.  Finally through the materializeBelongsTo method, the key ( product ) and value ( id ) are added to the records "_data.belongsTo" hash.</p>
+
+<h3>Back in the DS.Model materializeData method</h3>
+
+<p>Next the suspendRelationshipObservers method is called that temporarily suspends the relationships observers (belongsToDidChange and belongsToWillChange) so that materialization can happen that does not fire the usual observers such as making a record dirty when it changes.</p>
+
+<p>Then the notifyPropertyChange method is called with 'data'</p>
+
+<h3>Ember.Observable (in Ember.js)</h3>
+
+<p>This just calls propertyWillChange and propertyDidChange with 'data' that then enters Embers observable system.</p>
       </section>
     </div>
 
