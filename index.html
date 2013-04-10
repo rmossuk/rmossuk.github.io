@@ -253,9 +253,59 @@ The '_reference' property on the record is a computed property that calls the st
 
 <h3>DS.JSONSerializer</h3>
 
-<p>In the extract method the sideload method is called</p>
+<p>In the extract method the sideload method loads any sideloaded data from the json payload.  In our case there is none. </p>
 
-<p>In the sideload method </p>
+<p>The extractRecordRepresentation method is the called</p>
+
+<h3>DS.Serializer</h3>
+
+<p>In the extractRecordRepresentation method the load function is called that calls updateId on the store and then calls store#load</p>
+
+<h3>DS.Store</h3>
+
+<p>updateId adds this new records clientId to the typeMaps hash's clientIds array. Then adds the records id and clientId to the typeMaps idToCid hash.  It the add the clientId and id to the store's clientIdToId hash and add to the recordReferences hash if not there.   </p>
+
+<p>In the load method the clientId and the records payload hash is added to the cidToData hash as key and value. Then if the records clientId is in the stores recordCache (which it is) the loadedData method is set to be run on the record once in this run loop.  This will be run later.</p>
+
+<h3>Back in the DS.Serializer extractRecordRepresentation method</h3>
+
+<p>The stores prematerialize method is called </p>
+
+<h3>DS.Store</h3>
+
+<p>the prematerialize method adds an empty object to the stores clientIdToPrematerializedData hash (not sure what this is for yet)</p>
+
+<h3>DS.Model</h3>
+
+<p>The run loop now calls the updateRecordArrays method which calls the store dataWasUpdated method</p>
+
+<h3>DS.Store</h3>
+
+<p>The dataWasUpdated method checks if the record has been deleted during this run loop and if not calls updateRecordArrays.</p>
+
+<p>In the updateRecordArrays method loops through the typeMap for this type (App.BuildingBlock) recordArrays which we currently have none of and also loops through the loadingRecordArrays of which we also have none of.</p>
+
+<h3>DS.Model</h3>
+
+<p>The run loop now calls the loadedData method which calls send with 'loadedData' that then delegates to the statemanager's send method</p>
+
+<h3>DS.Statemanager</h3>
+
+<p>in the send method it calls sendEvent.</p>
+
+<p>The sendEvent function is called that then calls the sendRecursively function on the statemanager with event name and the currentState which is an instance of DS.State.</p>
+
+<p>the sendRecursively function calls didChangeData on the DS.State instance with the statemanager.  This method the calls the materializeData method on the record.</p>
+
+<h3>DS.Model</h3>
+
+<p>The materializeData method calls send with 'materializingData'. That again delegates to the statemanagers send method, calls sendEvent then sendRecursively and then calls materializingData that transistions the statemanagers state to 'loaded.materializing'</p>
+
+<p>The store materializeData method is called</p>
+
+<h3>DS.Store</h3>
+
+<p>The materializeData method sets the stores clientIdToData hash with key of this records clientId to be an object called MATERIALIZED instead of containing the records data hash</p>
       </section>
     </div>
 
